@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Engineering Roadmap 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&family=Bricolage+Grotesque:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0b0e;
+  --ink2: #13141a;
+  --ink3: #1a1c24;
+  --line: #242736;
+  --line2: #2e3147;
+  --fog: #4a4f6b;
+  --mist: #6b7299;
+  --snow: #c8ccdf;
+  --white: #eceef8;
+  --E: #e8f4fd;
+
+  --teal: #2dd4bf;
+  --teal-dim: rgba(45,212,191,0.12);
+  --teal-glow: rgba(45,212,191,0.25);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,0.12);
+  --rose: #fb7185;
+  --rose-dim: rgba(251,113,133,0.12);
+  --violet: #a78bfa;
+  --violet-dim: rgba(167,139,250,0.12);
+  --lime: #a3e635;
+  --lime-dim: rgba(163,230,53,0.1);
+  --sky: #38bdf8;
+  --sky-dim: rgba(56,189,248,0.1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--snow);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
+
+/* ─── AMBIENT BACKGROUND ─── */
+.ambient {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.ambient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.04;
+}
+.ab1 { width: 600px; height: 600px; background: var(--teal); top: -200px; right: -100px; }
+.ab2 { width: 500px; height: 500px; background: var(--violet); bottom: 10%; left: -150px; }
+.ab3 { width: 400px; height: 400px; background: var(--amber); top: 50%; right: 10%; }
+
+/* subtle dot matrix */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ─── HERO ─── */
+.hero {
+  position: relative; z-index: 2;
+  padding: 96px 32px 72px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 28px;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: block; width: 24px; height: 1px;
+  background: var(--teal);
+}
+.hero-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(52px, 8vw, 96px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.hero-title em {
+  font-style: normal;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--teal);
+}
+.hero-subtitle {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(18px, 2.5vw, 26px);
+  color: var(--mist);
+  font-style: italic;
+  margin-bottom: 48px;
+  margin-top: 12px;
+}
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+}
+.meta-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ink2);
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 8px 16px;
+  font-size: 11px;
+  color: var(--mist);
+}
+.meta-pill strong { color: var(--white); }
+.meta-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+
+/* ─── NAV ─── */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10,11,14,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--line);
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  padding: 0 32px;
+  overflow-x: auto;
+  gap: 2px;
+}
+.nav-inner::-webkit-scrollbar { display: none; }
+.ntab {
+  flex-shrink: 0;
+  padding: 16px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--fog);
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.ntab:hover { color: var(--snow); }
+.ntab.on { color: var(--teal); border-bottom-color: var(--teal); }
+
+/* ─── LAYOUT ─── */
+.page { display: none; }
+.page.on { display: block; }
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 32px;
+  position: relative; z-index: 2;
+}
+
+/* ─── SECTION HEADERS ─── */
+.sh { margin-bottom: 48px; }
+.sh-tag {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sh-tag::after { content: ''; flex: 1; height: 1px; background: var(--line); max-width: 80px; }
+.sh-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--white);
+  line-height: 1.05;
+}
+.sh-body {
+  font-family: 'Instrument Serif', serif;
+  font-size: 17px;
+  color: var(--mist);
+  font-style: italic;
+  margin-top: 10px;
+  max-width: 640px;
+}
+
+/* ─── SUB HEADERS ─── */
+.h2 {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+  margin-top: 52px;
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.h2-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px;
+  background: var(--teal-dim);
+  border: 1px solid var(--teal-glow);
+  border-radius: 6px;
+  font-size: 10px;
+  color: var(--teal);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* ─── CARDS ─── */
+.grid { display: grid; gap: 16px; }
+.g2 { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.g3 { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.g4 { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+
+.card {
+  background: var(--ink2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px;
+  transition: border-color 0.2s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+}
+.card:hover {
+  border-color: var(--line2);
+  transform: translateY(-2px);
+}
+.card.accent-teal { border-color: rgba(45,212,191,0.2); }
+.card.accent-teal:hover { border-color: rgba(45,212,191,0.45); }
+.card.accent-amber { border-color: rgba(245,158,11,0.2); }
+.card.accent-amber:hover { border-color: rgba(245,158,11,0.45); }
+.card.accent-rose { border-color: rgba(251,113,133,0.2); }
+.card.accent-rose:hover { border-color: rgba(251,113,133,0.45); }
+.card.accent-violet { border-color: rgba(167,139,250,0.2); }
+.card.accent-violet:hover { border-color: rgba(167,139,250,0.45); }
+
+.card-ico {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  margin-bottom: 14px;
+  background: var(--ink3);
+  border: 1px solid var(--line);
+}
+.card-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.card-body {
+  font-size: 12px;
+  color: var(--mist);
+  line-height: 1.75;
+}
+.card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.tag {
+  font-size: 10px;
+  padding: 3px 9px;
+  border-radius: 100px;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+}
+.t-teal { background: var(--teal-dim); color: var(--teal); border: 1px solid var(--teal-glow); }
+.t-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,158,11,0.25); }
+.t-rose { background: var(--rose-dim); color: var(--rose); border: 1px solid rgba(251,113,133,0.25); }
+.t-violet { background: var(--violet-dim); color: var(--violet); border: 1px solid rgba(167,139,250,0.25); }
+.t-lime { background: var(--lime-dim); color: var(--lime); border: 1px solid rgba(163,230,53,0.2); }
+.t-sky { background: var(--sky-dim); color: var(--sky); border: 1px solid rgba(56,189,248,0.2); }
+
+/* ─── PHASE TIMELINE ─── */
+.timeline { position: relative; padding-left: 52px; }
+.timeline-rail {
+  position: absolute; left: 15px; top: 24px; bottom: 24px;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--teal), var(--violet), var(--rose), transparent);
+  border-radius: 2px;
+}
+.phase { position: relative; margin-bottom: 56px; animation: rise 0.5s ease both; }
+.phase:nth-child(2){animation-delay:0.07s}
+.phase:nth-child(3){animation-delay:0.14s}
+.phase:nth-child(4){animation-delay:0.21s}
+.phase:nth-child(5){animation-delay:0.28s}
+.phase:nth-child(6){animation-delay:0.35s}
+.phase:nth-child(7){animation-delay:0.42s}
+@keyframes rise { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+
+.phase-node {
+  position: absolute;
+  left: -44px; top: 16px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 3px solid var(--ink);
+  box-shadow: 0 0 0 1px currentColor, 0 0 16px currentColor;
+}
+.phase-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.phase-badge {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+  border: 1px solid currentColor;
+  font-weight: 500;
+}
+.phase-duration { font-size: 11px; color: var(--fog); }
+.phase-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  margin-bottom: 18px;
+}
+
+/* ─── DETAIL PANELS ─── */
+.panel {
+  background: var(--ink2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.panel-head {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 10px;
+  background: var(--ink3);
+}
+.panel-head-icon { font-size: 16px; }
+.panel-head-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+}
+.panel-head-sub { font-size: 11px; color: var(--fog); margin-left: auto; }
+.panel-body { padding: 0; }
+.prow {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+.prow:last-child { border-bottom: none; }
+.prow-key { color: var(--snow); font-weight: 500; }
+.prow-val { color: var(--mist); line-height: 1.6; }
+.prow-val strong { color: var(--snow); }
+.prow-val code {
+  background: var(--ink3);
+  border: 1px solid var(--line2);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--teal);
+}
+
+/* ─── ARCH DIAGRAM ─── */
+.arch {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  padding: 4px 0 20px;
+  margin-bottom: 8px;
+}
+.arch::-webkit-scrollbar { height: 3px; }
+.arch::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 10px; }
+.arch-node {
+  flex-shrink: 0;
+  background: var(--ink2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 20px;
+  min-width: 120px;
+  text-align: center;
+  transition: all 0.2s;
+  cursor: default;
+}
+.arch-node:hover { border-color: var(--teal); background: var(--ink3); }
+.arch-node-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+.arch-node-name {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.arch-node-sub { font-size: 10px; color: var(--fog); line-height: 1.4; }
+.arch-arrow {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  gap: 2px;
+  color: var(--fog);
+}
+.arch-arrow-line { width: 32px; height: 1px; background: currentColor; }
+.arch-arrow-head { font-size: 10px; color: var(--teal); }
+
+/* ─── COMPARE TABLE ─── */
+.ctable { width: 100%; border-collapse: collapse; }
+.ctable th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal);
+  border-bottom: 1px solid var(--line2);
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+  background: var(--ink3);
+}
+.ctable td {
+  padding: 13px 16px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--mist);
+  vertical-align: top;
+}
+.ctable tr:hover td { background: var(--ink3); }
+.ctable td:first-child { color: var(--snow); font-weight: 500; }
+.ctable td code {
+  background: var(--ink3);
+  border: 1px solid var(--line2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--teal);
+}
+.green { color: var(--lime) !important; font-weight: 600 !important; }
+.amber-t { color: var(--amber) !important; font-weight: 600 !important; }
+.rose-t { color: var(--rose) !important; }
+
+/* ─── INFO BOXES ─── */
+.infobox {
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-size: 12px;
+  line-height: 1.75;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.infobox-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.infobox.info {
+  background: var(--teal-dim);
+  border: 1px solid var(--teal-glow);
+  color: var(--snow);
+}
+.infobox.warn {
+  background: var(--amber-dim);
+  border: 1px solid rgba(245,158,11,0.25);
+  color: var(--snow);
+}
+.infobox.tip {
+  background: var(--violet-dim);
+  border: 1px solid rgba(167,139,250,0.25);
+  color: var(--snow);
+}
+.infobox strong { color: var(--white); }
+
+/* ─── CHECKLIST ─── */
+.checks { list-style: none; }
+.checks li {
+  display: flex; gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--mist);
+  align-items: flex-start;
+}
+.checks li:last-child { border-bottom: none; }
+.checks-icon { flex-shrink: 0; color: var(--teal); font-size: 12px; margin-top: 2px; }
+.checks li strong { color: var(--snow); }
+
+/* ─── SKILLS BARS ─── */
+.sbar-row {
+  display: grid;
+  grid-template-columns: 200px 1fr 90px;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.sbar-name { font-size: 12px; color: var(--snow); }
+.sbar-track {
+  height: 5px;
+  background: var(--ink3);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.sbar-fill {
+  height: 100%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, var(--teal), var(--violet));
+}
+.sbar-label { font-size: 10px; color: var(--fog); text-align: right; letter-spacing: 0.06em; }
+
+/* ─── TOOL CARD ─── */
+.toolcard {
+  background: var(--ink2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+  transition: all 0.2s;
+}
+.toolcard:hover { border-color: var(--line2); transform: translateY(-1px); }
+.tc-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.tc-emoji { font-size: 22px; }
+.tc-name {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 14px; font-weight: 700;
+  color: var(--white);
+}
+.tc-cat { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 6px; }
+.tc-desc { font-size: 11px; color: var(--mist); line-height: 1.65; }
+.tc-when { font-size: 11px; color: var(--amber); margin-top: 8px; }
+
+/* ─── SALARY TABLE ─── */
+.stable { width: 100%; border-collapse: collapse; }
+.stable th {
+  text-align: left;
+  padding: 13px 18px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--teal);
+  border-bottom: 1px solid var(--line2);
+  font-family: 'DM Mono', monospace;
+  background: var(--ink3);
+  font-weight: 500;
+}
+.stable td {
+  padding: 14px 18px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--mist);
+}
+.stable tr:hover td { background: var(--ink3); }
+.stable td:first-child { color: var(--snow); font-weight: 600; font-size: 13px; }
+.salary { color: var(--lime) !important; font-weight: 600 !important; font-size: 13px !important; }
+.yoe { color: var(--amber) !important; }
+
+/* ─── DIVIDER ─── */
+.div { height: 1px; background: linear-gradient(90deg, transparent, var(--line), transparent); margin: 40px 0; }
+
+/* ─── ROADMAP PHASE COLORS ─── */
+.c-teal { color: var(--teal); }
+.c-amber { color: var(--amber); }
+.c-rose { color: var(--rose); }
+.c-violet { color: var(--violet); }
+.c-lime { color: var(--lime); }
+.c-sky { color: var(--sky); }
+.c-pink { color: #f472b6; }
+
+/* ─── STACK LAYER VIZ ─── */
+.stack { display: flex; flex-direction: column; gap: 6px; max-width: 680px; }
+.stack-layer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--ink2);
+  transition: all 0.2s;
+  cursor: default;
+}
+.stack-layer:hover { border-color: var(--teal-glow); }
+.stack-num {
+  font-size: 11px;
+  color: var(--teal);
+  width: 22px;
+  flex-shrink: 0;
+  font-weight: 500;
+}
+.stack-name {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--white);
+  width: 160px;
+  flex-shrink: 0;
+}
+.stack-tools { font-size: 11px; color: var(--mist); flex: 1; }
+.stack-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+
+/* ─── CODE BLOCK ─── */
+.codeblock {
+  background: var(--ink3);
+  border: 1px solid var(--line2);
+  border-radius: 12px;
+  padding: 20px 24px;
+  font-size: 12px;
+  color: var(--snow);
+  overflow-x: auto;
+  margin: 16px 0;
+  line-height: 1.9;
+}
+.codeblock .kw { color: var(--violet); }
+.codeblock .fn { color: var(--teal); }
+.codeblock .str { color: var(--amber); }
+.codeblock .cm { color: var(--fog); font-style: italic; }
+.codeblock .num { color: var(--rose); }
+
+/* ─── FOOTER ─── */
+footer {
+  position: relative; z-index: 2;
+  text-align: center;
+  padding: 48px 32px;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+  color: var(--fog);
+  letter-spacing: 0.06em;
+}
+footer a { color: var(--teal); text-decoration: none; }
+
+/* ─── ANIMATIONS ─── */
+@keyframes pulse-ring {
+  0%,100% { box-shadow: 0 0 0 0 currentColor; opacity: 0.6; }
+  50% { box-shadow: 0 0 0 4px transparent; opacity: 1; }
+}
+.phase-node { animation: pulse-ring 3s ease infinite; }
+</style>
+</head>
+<body>
+
+<div class="ambient">
+  <div class="ambient-blob ab1"></div>
+  <div class="ambient-blob ab2"></div>
+  <div class="ambient-blob ab3"></div>
+</div>
+
+<!-- ════════════ HERO ════════════ -->
+<div class="hero">
+  <div class="hero-eyebrow">Complete Learning Path · 2025 Edition</div>
+  <h1 class="hero-title">Data<br><em>Engineering</em></h1>
+  <p class="hero-subtitle">From raw bytes to production pipelines — a definitive, deeply technical roadmap.</p>
+  <div class="hero-meta">
+    <div class="meta-pill"><div class="meta-dot"></div><strong>7 Phases</strong> &nbsp;Progressive</div>
+    <div class="meta-pill"><div class="meta-dot" style="background:var(--amber)"></div><strong>12–18 mo.</strong> &nbsp;Full Path</div>
+    <div class="meta-pill"><div class="meta-dot" style="background:var(--violet)"></div><strong>60+ Tools</strong> &nbsp;Mapped</div>
+    <div class="meta-pill"><div class="meta-dot" style="background:var(--lime)"></div><strong>$120K–$350K</strong> &nbsp;Salary Range</div>
+    <div class="meta-pill"><div class="meta-dot" style="background:var(--rose)"></div><strong>2025</strong> &nbsp;Up-to-date</div>
+  </div>
+</div>
+
+<!-- ════════════ NAV ════════════ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="ntab on" onclick="go('overview',this)">Overview</button>
+    <button class="ntab" onclick="go('foundations',this)">Foundations</button>
+    <button class="ntab" onclick="go('storage',this)">Data Storage</button>
+    <button class="ntab" onclick="go('pipelines',this)">Pipelines & ETL</button>
+    <button class="ntab" onclick="go('distributed',this)">Distributed Systems</button>
+    <button class="ntab" onclick="go('cloud',this)">Cloud & DevOps</button>
+    <button class="ntab" onclick="go('governance',this)">Quality & Governance</button>
+    <button class="ntab" onclick="go('tools',this)">Tools Arsenal</button>
+    <button class="ntab" onclick="go('career',this)">Career</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: OVERVIEW                            -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page on" id="overview">
+<div class="wrap">
+
+  <div class="sh">
+    <div class="sh-tag">Phase Map</div>
+    <h2 class="sh-title">The Modern Data<br>Engineering Landscape</h2>
+    <p class="sh-body">Data Engineers build and operate the infrastructure that moves, stores, transforms and serves data reliably at scale.</p>
+  </div>
+
+  <!-- WHAT IS A DATA ENGINEER -->
+  <div class="infobox info">
+    <span class="infobox-icon">💡</span>
+    <div><strong>What does a Data Engineer actually do?</strong> A Data Engineer designs and builds data pipelines that collect raw data from dozens of sources, clean and transform it, store it efficiently, and make it available to analysts, data scientists, and applications. They own the reliability, scalability, and cost of the entire data infrastructure — essentially the "plumbers" of the data world.</div>
+  </div>
+
+  <!-- MODERN DATA STACK LAYERS -->
+  <div class="h2"><div class="h2-num">01</div> Modern Data Stack — Layer by Layer</div>
+  <div class="stack">
+    <div class="stack-layer"><div class="stack-num">L7</div><div class="stack-name">Consumption</div><div class="stack-tools">BI tools (Tableau, Metabase, Looker), ML models, APIs, data apps, reverse ETL</div><span class="stack-badge t-sky">Serving</span></div>
+    <div class="stack-layer"><div class="stack-num">L6</div><div class="stack-name">Observability</div><div class="stack-tools">Monte Carlo, Bigeye, Great Expectations, custom monitors, alerting (PagerDuty/Slack)</div><span class="stack-badge t-violet">Monitor</span></div>
+    <div class="stack-layer"><div class="stack-num">L5</div><div class="stack-name">Transformation</div><div class="stack-tools">dbt (SQL-based ELT), Spark (large-scale), Flink (streaming transforms), custom Python</div><span class="stack-badge t-amber">Transform</span></div>
+    <div class="stack-layer"><div class="stack-num">L4</div><div class="stack-name">Storage</div><div class="stack-tools">S3/GCS/ADLS (data lake), Snowflake/BigQuery/Redshift (warehouse), Delta/Iceberg (lakehouse)</div><span class="stack-badge t-teal">Store</span></div>
+    <div class="stack-layer"><div class="stack-num">L3</div><div class="stack-name">Orchestration</div><div class="stack-tools">Apache Airflow, Prefect, Dagster — schedule, monitor and coordinate all pipeline runs</div><span class="stack-badge t-rose">Orchestrate</span></div>
+    <div class="stack-layer"><div class="stack-num">L2</div><div class="stack-name">Ingestion</div><div class="stack-tools">Fivetran / Airbyte (batch ELT), Kafka / Kinesis (streaming), Debezium (CDC), custom APIs</div><span class="stack-badge t-lime">Ingest</span></div>
+    <div class="stack-layer"><div class="stack-num">L1</div><div class="stack-name">Sources</div><div class="stack-tools">Operational DBs (Postgres/MySQL), SaaS apps (Salesforce/Stripe), event streams, files, IoT</div><span class="stack-badge" style="background:var(--ink3);color:var(--fog);border:1px solid var(--line)">Sources</span></div>
+  </div>
+
+  <!-- 7 PHASE TIMELINE -->
+  <div class="h2"><div class="h2-num">02</div> 7-Phase Learning Roadmap</div>
+
+  <div class="timeline">
+    <div class="timeline-rail"></div>
+
+    <!-- Phase 1 -->
+    <div class="phase">
+      <div class="phase-node" style="color:var(--teal)"></div>
+      <div class="phase-meta">
+        <span class="phase-badge c-teal" style="border-color:var(--teal)">Phase 1</span>
+        <span class="phase-duration">Months 1–2</span>
+      </div>
+      <div class="phase-title">Foundations</div>
+      <div class="grid g3">
+        <div class="card accent-teal"><div class="card-ico">🐍</div><div class="card-title">Python</div><div class="card-body">OOP, generators, decorators, asyncio, testing (pytest), packaging, type hints. Focus on writing clean, production-grade code — not just scripts.</div><div class="card-tags"><span class="tag t-teal">Essential</span></div></div>
+        <div class="card accent-teal"><div class="card-ico">🗃️</div><div class="card-title">SQL & Databases</div><div class="card-body">DDL/DML, window functions, CTEs, query optimization, indexes, ACID, transactions, normalization. Master PostgreSQL as your primary RDBMS.</div><div class="card-tags"><span class="tag t-teal">Essential</span></div></div>
+        <div class="card accent-teal"><div class="card-ico">🐧</div><div class="card-title">Linux & Bash</div><div class="card-body">Shell scripting, cron, processes, permissions, networking basics (curl, netstat), text processing (grep/sed/awk/jq), SSH, environment variables.</div><div class="card-tags"><span class="tag t-teal">Essential</span></div></div>
+      </div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="phase">
+      <div class="phase-node" style="color:var(--amber)"></div>
+      <div class="phase-meta">
+        <span class="phase-badge c-amber" style="border-color:var(--amber)">Phase 2</span>
+        <span class="phase-duration">Months 2–4</span>
+      </div>
+      <div class="phase-title">Data Storage & Modeling</div>
+      <div class="grid g3">
+        <div class="card accent-amber"><div class="card-ico">📦</div><div class="card-title">File Formats</div><div class="card-body">Parquet (columnar analytics), Avro (streaming/CDC), ORC (Hive), JSON/CSV. Compression codecs: Snappy, Zstd, Gzip. Schema evolution patterns.</div><div class="card-tags"><span class="tag t-amber">Core</span></div></div>
+        <div class="card accent-amber"><div class="card-ico">🏛️</div><div class="card-title">Data Modeling</div><div class="card-body">Kimball dimensional modeling: star schema, snowflake, fact & dimension tables, SCDs (Type 1/2/3), grain definition, surrogate keys, conformed dims.</div><div class="card-tags"><span class="tag t-amber">Core</span></div></div>
+        <div class="card accent-amber"><div class="card-ico">🔑</div><div class="card-title">NoSQL & Caching</div><div class="card-body">Redis (caching, pub/sub), MongoDB (documents), Cassandra (wide-column, time-series), Elasticsearch (full-text search). Know when NOT to use SQL.</div><div class="card-tags"><span class="tag t-amber">Valuable</span></div></div>
+      </div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="phase">
+      <div class="phase-node" style="color:var(--violet)"></div>
+      <div class="phase-meta">
+        <span class="phase-badge c-violet" style="border-color:var(--violet)">Phase 3</span>
+        <span class="phase-duration">Months 4–6</span>
+      </div>
+      <div class="phase-title">Pipelines & Orchestration</div>
+      <div class="grid g3">
+        <div class="card accent-violet"><div class="card-ico">🔄</div><div class="card-title">ETL / ELT Design</div><div class="card-body">Batch vs streaming, idempotency, backfilling, CDC (Change Data Capture), data lineage, pipeline testing strategies, error handling and retries.</div><div class="card-tags"><span class="tag t-violet">Critical</span></div></div>
+        <div class="card accent-violet"><div class="card-ico">🌀</div><div class="card-title">Apache Airflow</div><div class="card-body">DAGs, operators, sensors, hooks, XComs, executors (Celery, Kubernetes), task groups, dynamic tasks (.expand()), Variables, Connections, best practices.</div><div class="card-tags"><span class="tag t-violet">Critical</span></div></div>
+        <div class="card accent-violet"><div class="card-ico">🌿</div><div class="card-title">dbt</div><div class="card-body">Models, tests, docs, macros (Jinja), seeds, snapshots, incremental models, sources, exposures, packages, CI/CD integration with state-based slim CI.</div><div class="card-tags"><span class="tag t-violet">Critical</span></div></div>
+      </div>
+    </div>
+
+    <!-- Phase 4 -->
+    <div class="phase">
+      <div class="phase-node" style="color:var(--rose)"></div>
+      <div class="phase-meta">
+        <span class="phase-badge c-rose" style="border-color:var(--rose)">Phase 4</span>
+        <span class="phase-duration">Months 6–9</span>
+      </div>
+      <div class="phase-title">Distributed Computing & Streaming</div>
+      <div class="grid g3">
+        <div class="card accent-rose"><div class="card-ico">⚡</div><div class="card-title">Apache Spark</div><div class="card-body">RDDs, DataFrames, Spark SQL, lazy evaluation, Catalyst optimizer, AQE (Spark 3+), partitioning, caching, broadcast joins, Tungsten memory management.</div><div class="card-tags"><span class="tag t-rose">Advanced</span></div></div>
+        <div class="card accent-rose"><div class="card-ico">📡</div><div class="card-title">Apache Kafka</div><div class="card-body">Topics, partitions, consumer groups, offsets, replication, ISR, Schema Registry (Avro/Protobuf), Kafka Connect, Kafka Streams, exactly-once semantics.</div><div class="card-tags"><span class="tag t-rose">Advanced</span></div></div>
+        <div class="card accent-rose"><div class="card-ico">🌊</div><div class="card-title">Stream Processing</div><div class="card-body">Apache Flink, Spark Structured Streaming. Tumbling/sliding/session windows, watermarks, event time vs processing time, stateful operations, late data.</div><div class="card-tags"><span class="tag t-rose">Advanced</span></div></div>
+      </div>
+    </div>
+
+    <!-- Phase 5 -->
+    <div class="phase">
+      <div class="phase-node" style="color:var(--lime)"></div>
+      <div class="phase-meta">
+        <span class="phase-badge c-lime" style="border-color:var(--lime)">Phase 5</span>
+        <span class="phase-duration">Months 9–12</span>
+      </div>
+      <div class="phase-title">Cloud Platforms & Infrastructure</div>
+      <div class="grid g3">
+        <div class="card"><div class="card-ico">☁️</div><div class="card-title">Cloud Mastery</div><div class="card-body">Pick one: AWS (S3, Glue, EMR, Kinesis, Redshift, IAM), GCP (BigQuery, GCS, Dataflow, Pub/Sub, Dataproc), or Azure (ADLS, ADF, Synapse, Event Hubs).</div><div class="card-tags"><span class="tag t-lime">Cloud</span></div></div>
+        <div class="card"><div class="card-ico">🐳</div><div class="card-title">Docker & Kubernetes</div><div class="card-body">Containerize pipelines, docker-compose for local dev, K8s deployments, KubernetesExecutor for Airflow, Helm charts, resource limits and autoscaling.</div><div class="card-tags"><span class="tag t-lime">Infra</span></div></div>
+        <div class="card"><div class="card-ico">🏗️</div><div class="card-title">Infrastructure as Code</div><div class="card-body">Terraform for cloud provisioning, CI/CD with GitHub Actions (lint, test, deploy DAGs), secrets management (Vault, AWS Secrets Manager), GitOps practices.</div><div class="card-tags"><span class="tag t-lime">DevOps</span></div></div>
+      </div>
+    </div>
+
+    <!-- Phase 6 -->
+    <div class="phase">
+      <div class="phase-node" style="color:var(--sky)"></div>
+      <div class="phase-meta">
+        <span class="phase-badge c-sky" style="border-color:var(--sky)">Phase 6</span>
+        <span class="phase-duration">Months 12–15</span>
+      </div>
+      <div class="phase-title">Data Quality & Governance</div>
+      <div class="grid g3">
+        <div class="card"><div class="card-ico">✅</div><div class="card-title">Data Quality</div><div class="card-body">Great Expectations / Soda Core — write and run data assertions. Data contracts, schema validation, anomaly detection, SLA monitoring, freshness checks.</div><div class="card-tags"><span class="tag t-sky">Governance</span></div></div>
+        <div class="card"><div class="card-ico">🗺️</div><div class="card-title">Metadata & Lineage</div><div class="card-body">DataHub, OpenMetadata or Amundsen for data catalog. Column-level lineage, business glossary, impact analysis, PII tagging, data discovery.</div><div class="card-tags"><span class="tag t-sky">Governance</span></div></div>
+        <div class="card"><div class="card-ico">🔒</div><div class="card-title">Security & Compliance</div><div class="card-body">PII detection & masking, GDPR/CCPA requirements, column/row-level security in warehouses, data encryption at rest and in transit, audit logging, RBAC.</div><div class="card-tags"><span class="tag t-sky">Security</span></div></div>
+      </div>
+    </div>
+
+    <!-- Phase 7 -->
+    <div class="phase">
+      <div class="phase-node" style="color:#f472b6"></div>
+      <div class="phase-meta">
+        <span class="phase-badge c-pink" style="border-color:#f472b6">Phase 7</span>
+        <span class="phase-duration">Months 15–18+</span>
+      </div>
+      <div class="phase-title">Advanced & Emerging Topics</div>
+      <div class="grid g3">
+        <div class="card"><div class="card-ico">🧊</div><div class="card-title">Open Table Formats</div><div class="card-body">Apache Iceberg (Netflix), Delta Lake (Databricks), Apache Hudi (Uber). ACID on data lakes, time travel, schema evolution, partition evolution, merge-on-read vs copy-on-write.</div><div class="card-tags"><span class="tag t-violet">Expert</span></div></div>
+        <div class="card"><div class="card-ico">🤖</div><div class="card-title">MLOps & Feature Stores</div><div class="card-body">Feature engineering pipelines for ML, Feast/Hopsworks feature stores, vector databases (Pinecone, pgvector, Weaviate) for RAG/LLM applications, model serving infra.</div><div class="card-tags"><span class="tag t-violet">Expert</span></div></div>
+        <div class="card"><div class="card-ico">🌐</div><div class="card-title">Data Mesh</div><div class="card-body">Domain-driven data ownership, data products as first-class citizens, self-serve infrastructure platform, federated computational governance — Zhamak Dehghani's paradigm.</div><div class="card-tags"><span class="tag t-violet">Expert</span></div></div>
+      </div>
+    </div>
+
+  </div><!-- /timeline -->
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: FOUNDATIONS                         -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="foundations">
+<div class="wrap">
+
+  <div class="sh">
+    <div class="sh-tag">Phase 1 · Months 1–2</div>
+    <h2 class="sh-title">Foundations</h2>
+    <p class="sh-body">The non-negotiable bedrock. Every hour spent here compounds for your entire career.</p>
+  </div>
+
+  <!-- PYTHON -->
+  <div class="h2"><div class="h2-num">01</div> Python for Data Engineers</div>
+  <div class="infobox info">
+    <span class="infobox-icon">💡</span>
+    <div>Data Engineers use Python differently from Data Scientists. You're not exploring data with pandas — you're writing <strong>production software</strong>: pipeline orchestration, API clients, custom operators, data validators. Prioritize code quality, testability, and reliability over interactivity.</div>
+  </div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🐍</div><div class="panel-head-title">Core Language</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Data Structures</div><div class="prow-val">Lists, dicts, sets, tuples, <code>collections.deque</code>, <code>defaultdict</code>, <code>Counter</code>. List/dict/set comprehensions. When to use each.</div></div>
+        <div class="prow"><div class="prow-key">OOP</div><div class="prow-val">Classes, <code>__init__</code>, inheritance, <code>@property</code>, <code>@staticmethod</code>, <code>@classmethod</code>, dataclasses (<code>@dataclass</code>), abstract base classes (<code>ABC</code>).</div></div>
+        <div class="prow"><div class="prow-key">Generators & Iterators</div><div class="prow-val"><code>yield</code>, <code>yield from</code>, generator expressions, <code>itertools</code>. Memory-efficient processing of large data files without loading all into RAM.</div></div>
+        <div class="prow"><div class="prow-key">Decorators</div><div class="prow-val">Function decorators with <code>@wraps</code>, class decorators, decorators with arguments. Used heavily in Airflow (<code>@task</code>) and FastAPI.</div></div>
+        <div class="prow"><div class="prow-key">Async / Concurrency</div><div class="prow-val"><code>asyncio</code>, <code>async/await</code>, <code>aiohttp</code> for concurrent API calls. <code>threading</code> vs <code>multiprocessing</code> vs <code>asyncio</code> — know when to use each.</div></div>
+        <div class="prow"><div class="prow-key">Error Handling</div><div class="prow-val">Custom exception hierarchies, <code>try/except/else/finally</code>, context managers (<code>__enter__/__exit__</code>), <code>contextlib</code>. Production-grade error propagation.</div></div>
+        <div class="prow"><div class="prow-key">Type Hints</div><div class="prow-val"><code>typing</code> module, <code>Optional</code>, <code>Union</code>, <code>TypeVar</code>, <code>Protocol</code>. Pydantic for runtime validation. Mypy for static type checking in CI.</div></div>
+        <div class="prow"><div class="prow-key">Testing</div><div class="prow-val">pytest: fixtures, parametrize, monkeypatch, mocking with <code>unittest.mock</code>. Test pipeline logic independently of infrastructure using dependency injection.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">📦</div><div class="panel-head-title">Data Engineering Libraries</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Pandas</div><div class="prow-val">DataFrames, Series, <code>groupby</code>, <code>merge/join</code>, <code>pivot_table</code>, time-series resampling. Good for &lt;1GB. Use <code>dtype</code> optimization and <code>chunksize</code> for larger files.</div></div>
+        <div class="prow"><div class="prow-key">Polars</div><div class="prow-val">Rust-based DataFrame library. 10–100× faster than Pandas for many operations. Lazy evaluation, columnar memory (Arrow), multi-threaded. The future of Python DataFrames.</div></div>
+        <div class="prow"><div class="prow-key">PyArrow</div><div class="prow-val">In-memory columnar format (Apache Arrow). Parquet/ORC I/O, Arrow IPC (fast zero-copy data exchange), Arrow Flight (high-speed data transfer over gRPC).</div></div>
+        <div class="prow"><div class="prow-key">SQLAlchemy 2.0</div><div class="prow-val">ORM and Core expression language, <code>engine</code>, connection pools (<code>pool_size</code>, <code>max_overflow</code>), session management, <code>text()</code> for raw SQL with parameter binding.</div></div>
+        <div class="prow"><div class="prow-key">Pydantic v2</div><div class="prow-val">Schema validation, settings management (<code>BaseSettings</code>), JSON serialization. Define data contracts as Python models. Replaces manual validation code.</div></div>
+        <div class="prow"><div class="prow-key">httpx / requests</div><div class="prow-val">REST API consumption. httpx supports async and HTTP/2. Handle pagination, rate limiting, exponential backoff with <code>tenacity</code>, OAuth2 token refresh.</div></div>
+        <div class="prow"><div class="prow-key">DuckDB</div><div class="prow-val">In-process OLAP engine. Query Parquet/CSV/JSON directly with SQL. Blazing fast for local EDA and pipeline testing. No cluster needed for &lt;50GB.</div></div>
+        <div class="prow"><div class="prow-key">Packaging</div><div class="prow-val"><code>pyproject.toml</code>, <code>poetry</code> or <code>uv</code> for dependency management. Virtual environments. Publish internal packages to PyPI/Artifactory for shared pipeline utilities.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SQL -->
+  <div class="h2"><div class="h2-num">02</div> Advanced SQL — The Most Underrated Skill</div>
+  <div class="infobox warn">
+    <span class="infobox-icon">⚠️</span>
+    <div><strong>Senior engineers are distinguished by SQL skill.</strong> Complex window functions, query optimization, and understanding the query planner separates a junior who "knows SQL" from a senior who can make a query 100× faster. Practice daily on LeetCode, StrataScratch and DataLemur.</div>
+  </div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">📐</div><div class="panel-head-title">Window Functions — Must Master</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Ranking</div><div class="prow-val"><code>ROW_NUMBER()</code>, <code>RANK()</code>, <code>DENSE_RANK()</code>, <code>NTILE(n)</code> — over PARTITION BY with ORDER BY. Know the differences by heart.</div></div>
+        <div class="prow"><div class="prow-key">Offset</div><div class="prow-val"><code>LAG(col, n)</code> / <code>LEAD(col, n)</code> — access previous/next row values. Critical for time-series comparisons (day-over-day growth, session gaps).</div></div>
+        <div class="prow"><div class="prow-key">Aggregates</div><div class="prow-val"><code>SUM() OVER()</code>, <code>AVG() OVER()</code>, <code>COUNT() OVER()</code> — running totals, moving averages, cumulative sums without collapsing rows.</div></div>
+        <div class="prow"><div class="prow-key">Frame Clause</div><div class="prow-val"><code>ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW</code> (cumulative) vs <code>ROWS BETWEEN 6 PRECEDING AND CURRENT ROW</code> (7-day moving average).</div></div>
+        <div class="prow"><div class="prow-key">FIRST/LAST VALUE</div><div class="prow-val"><code>FIRST_VALUE(col)</code>, <code>LAST_VALUE(col)</code>, <code>NTH_VALUE(col, n)</code> — retrieve specific row values within a window partition.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">⚙️</div><div class="panel-head-title">Query Optimization & Internals</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">EXPLAIN ANALYZE</div><div class="prow-val">Read execution plans. Identify: Sequential Scans (missing index), Nested Loop joins (prefer Hash Join for large tables), high cost nodes, row estimate errors.</div></div>
+        <div class="prow"><div class="prow-key">Index Types</div><div class="prow-val">B-tree (equality + range), Hash (equality only), GIN (arrays/JSONB/full-text), BRIN (time-ordered data). Partial and expression indexes. Covering indexes.</div></div>
+        <div class="prow"><div class="prow-key">Vacuuming</div><div class="prow-val">PostgreSQL MVCC: dead tuples accumulate after updates/deletes. <code>VACUUM ANALYZE</code> reclaims space and updates statistics for better query plans.</div></div>
+        <div class="prow"><div class="prow-key">CTEs vs Subqueries</div><div class="prow-val">In Postgres 12+, CTEs are inlined by default (use <code>WITH ... AS MATERIALIZED</code> to force materialization). Recursive CTEs for graph/hierarchy traversal.</div></div>
+        <div class="prow"><div class="prow-key">Partitioning</div><div class="prow-val">Range (by date), List (by region/category), Hash (by ID). Partition pruning eliminates unneeded partitions at plan time. Critical for warehouse performance.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAMPLE WINDOW FUNCTION CODE -->
+  <div class="h2"><div class="h2-num">03</div> Window Function Patterns (Cheat Sheet)</div>
+  <div class="codeblock">
+<span class="cm">-- 7-day moving average of revenue</span>
+<span class="kw">SELECT</span>
+    date,
+    revenue,
+    <span class="fn">AVG</span>(revenue) <span class="kw">OVER</span> (
+        <span class="kw">ORDER BY</span> date
+        <span class="kw">ROWS BETWEEN</span> <span class="num">6</span> <span class="kw">PRECEDING AND CURRENT ROW</span>
+    ) <span class="kw">AS</span> moving_avg_7d,
+
+<span class="cm">-- Cumulative sum (running total)</span>
+    <span class="fn">SUM</span>(revenue) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date) <span class="kw">AS</span> cumulative_revenue,
+
+<span class="cm">-- Month-over-month growth %</span>
+    (revenue - <span class="fn">LAG</span>(revenue, <span class="num">1</span>) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date))
+    / <span class="fn">NULLIF</span>(<span class="fn">LAG</span>(revenue, <span class="num">1</span>) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> date), <span class="num">0</span>) * <span class="num">100</span> <span class="kw">AS</span> mom_pct,
+
+<span class="cm">-- Rank within each product category</span>
+    <span class="fn">RANK</span>() <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> product_category <span class="kw">ORDER BY</span> revenue <span class="kw">DESC</span>) <span class="kw">AS</span> rank_in_cat
+
+<span class="kw">FROM</span> daily_revenue;
+  </div>
+
+  <!-- SKILL BARS -->
+  <div class="h2"><div class="h2-num">04</div> Foundation Skill Targets</div>
+  <div class="sbar-row"><div class="sbar-name">Python (core language)</div><div class="sbar-track"><div class="sbar-fill" style="width:90%"></div></div><div class="sbar-label">90% — Job-ready</div></div>
+  <div class="sbar-row"><div class="sbar-name">SQL (analytics)</div><div class="sbar-track"><div class="sbar-fill" style="width:85%"></div></div><div class="sbar-label">85% — Window Fns</div></div>
+  <div class="sbar-row"><div class="sbar-name">Linux / Bash</div><div class="sbar-track"><div class="sbar-fill" style="width:70%"></div></div><div class="sbar-label">70% — Scripting</div></div>
+  <div class="sbar-row"><div class="sbar-name">Git / Version Control</div><div class="sbar-track"><div class="sbar-fill" style="width:80%"></div></div><div class="sbar-label">80% — Branching</div></div>
+  <div class="sbar-row"><div class="sbar-name">Docker (basics)</div><div class="sbar-track"><div class="sbar-fill" style="width:60%"></div></div><div class="sbar-label">60% — Run locally</div></div>
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: DATA STORAGE                        -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="storage">
+<div class="wrap">
+
+  <div class="sh">
+    <div class="sh-tag">Phase 2 · Months 2–4</div>
+    <h2 class="sh-title">Data Storage & Modeling</h2>
+    <p class="sh-body">How and where data lives — the foundational decisions that determine cost, performance, and flexibility.</p>
+  </div>
+
+  <div class="h2"><div class="h2-num">01</div> Storage Format Comparison</div>
+  <div class="infobox info">
+    <span class="infobox-icon">💡</span>
+    <div><strong>Rule of thumb:</strong> Use <strong>Parquet</strong> for analytical workloads (fast reads, column pruning). Use <strong>Avro</strong> for streaming and ingestion (schema evolution, fast row writes). Use <strong>Delta/Iceberg</strong> when you need ACID transactions and time-travel on your data lake.</div>
+  </div>
+  <div style="border-radius:16px;overflow:hidden;border:1px solid var(--line)">
+  <table class="ctable">
+    <thead><tr><th>Format</th><th>Type</th><th>Best For</th><th>Schema Evol.</th><th>Compression</th><th>Ecosystem</th></tr></thead>
+    <tbody>
+      <tr><td>Parquet</td><td>Columnar</td><td>Analytics, data lake, Spark reads</td><td>Add cols only</td><td>Snappy / Zstd / Gzip</td><td>Spark, Hive, BigQuery, Trino</td></tr>
+      <tr><td>Avro</td><td>Row-based</td><td>Kafka CDC, streaming ingestion</td><td>Full (fwd+bkwd)</td><td>Deflate / Snappy</td><td>Kafka, Hadoop, Confluent</td></tr>
+      <tr><td>ORC</td><td>Columnar</td><td>Hive/Presto queries, Hadoop</td><td>Add cols only</td><td>Zlib / Snappy</td><td>Hive, Presto, Spark</td></tr>
+      <tr><td>Delta Lake</td><td>Parquet + log</td><td>Lakehouse, ACID on S3/ADLS</td><td>Full (add/drop)</td><td>Snappy / Zstd</td><td>Databricks, Spark, Trino</td></tr>
+      <tr><td>Iceberg</td><td>Parquet/Avro/ORC + catalog</td><td>Multi-engine lakehouse</td><td>Full incl. rename</td><td>Any Parquet codec</td><td>Spark, Flink, Trino, Hive</td></tr>
+      <tr><td>Hudi</td><td>Parquet + log</td><td>Incremental upserts, CDC pipelines</td><td>Full</td><td>Parquet codecs</td><td>Spark, Hive, Presto</td></tr>
+      <tr><td>JSON / CSV</td><td>Row text</td><td>Interchange only — avoid at scale</td><td>None enforced</td><td>Gzip optional</td><td>Universal</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="h2"><div class="h2-num">02</div> Warehouse vs Lake vs Lakehouse</div>
+  <div class="grid g3">
+    <div class="card accent-teal">
+      <div class="card-ico">🏛️</div>
+      <div class="card-title">Data Warehouse</div>
+      <div class="card-body">Structured, schema-on-write. Optimized for BI queries. SQL-based. Examples: Snowflake, BigQuery, Redshift. ACID, fast queries, expensive storage. Best for <strong>analytics and reporting</strong>.</div>
+      <div class="card-tags"><span class="tag t-teal">Structured</span><span class="tag t-teal">SQL</span></div>
+    </div>
+    <div class="card accent-amber">
+      <div class="card-ico">🏞️</div>
+      <div class="card-title">Data Lake</div>
+      <div class="card-body">Raw, schema-on-read. Stores all data in any format (Parquet, JSON, images, logs). Cheap storage (S3/GCS). No ACID. Flexible but can become a "data swamp" without governance.</div>
+      <div class="card-tags"><span class="tag t-amber">Any Format</span><span class="tag t-amber">Cheap</span></div>
+    </div>
+    <div class="card accent-violet">
+      <div class="card-ico">🏗️</div>
+      <div class="card-title">Lakehouse</div>
+      <div class="card-body">Best of both: cheap lake storage + warehouse-grade ACID transactions, time travel, schema enforcement. Iceberg/Delta/Hudi on S3. Query with Spark, Trino, or directly via BigQuery Omni.</div>
+      <div class="card-tags"><span class="tag t-violet">ACID</span><span class="tag t-violet">Open Format</span></div>
+    </div>
+  </div>
+
+  <div class="h2"><div class="h2-num">03</div> Kimball Dimensional Modeling</div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">⭐</div><div class="panel-head-title">Star Schema Components</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Fact Table</div><div class="prow-val">Records measurable business events (a sale, a page view, an order). Contains: <strong>metrics</strong> (revenue, quantity) + <strong>foreign keys</strong> to dimension tables. Should be as narrow as possible.</div></div>
+        <div class="prow"><div class="prow-key">Dimension Table</div><div class="prow-val">Descriptive context: <strong>who, what, where, when</strong>. Customer, Product, Store, Date dimensions. Denormalized (flat) for fast joins. Contains surrogate key + attributes.</div></div>
+        <div class="prow"><div class="prow-key">Grain</div><div class="prow-val"><strong>Most important decision in modeling.</strong> "One row per order line item" or "one row per daily customer total"? Define grain before designing any table. Get it wrong = redesign everything.</div></div>
+        <div class="prow"><div class="prow-key">Surrogate Keys</div><div class="prow-val">Auto-generated integer IDs (not business keys). Isolate warehouse from source system changes. Enables SCD Type 2 — a customer can have multiple surrogate keys for different time periods.</div></div>
+        <div class="prow"><div class="prow-key">Conformed Dims</div><div class="prow-val">Shared dimension tables used across multiple fact tables (e.g. dim_date, dim_customer). Enables cross-process analysis — e.g. compare sales vs support tickets by same customer.</div></div>
+        <div class="prow"><div class="prow-key">Degenerate Dims</div><div class="prow-val">Dimension attributes stored directly in fact table with no separate dim (e.g. order_number, invoice_number). No dim table needed — used for transaction identifiers.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🔄</div><div class="panel-head-title">Slowly Changing Dimensions (SCDs)</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Type 0 — Retain</div><div class="prow-val">Never change. Original value kept forever. Used for attributes like date of birth that should not be overwritten.</div></div>
+        <div class="prow"><div class="prow-key">Type 1 — Overwrite</div><div class="prow-val">Overwrite old value with new value. <strong>No history.</strong> Simple but loses the past. Use for corrections or attributes where history is irrelevant (e.g. phone number fix).</div></div>
+        <div class="prow"><div class="prow-key">Type 2 — New Row</div><div class="prow-val"><strong>Most common.</strong> Insert a new row for the new version. Track with <code>effective_from</code>, <code>effective_to</code>, <code>is_current</code> flag. Full history preserved. Implemented by dbt snapshots.</div></div>
+        <div class="prow"><div class="prow-key">Type 3 — New Column</div><div class="prow-val">Add <code>previous_value</code> column. Simple — only tracks one change back. Useful for "current vs original" comparisons. Limited history.</div></div>
+        <div class="prow"><div class="prow-key">Type 4 — Mini Dim</div><div class="prow-val">Separate fast-changing attributes into a separate "mini-dimension" table. Used when only a few attributes change frequently (e.g. customer credit score, loyalty tier).</div></div>
+        <div class="prow"><div class="prow-key">Type 6 — Hybrid</div><div class="prow-val">Combines Type 1+2+3. New row (Type 2) + overwrite current value columns (Type 1) + previous value column (Type 3). Full flexibility at cost of complexity.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: PIPELINES                           -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="pipelines">
+<div class="wrap">
+
+  <div class="sh">
+    <div class="sh-tag">Phase 3 · Months 4–6</div>
+    <h2 class="sh-title">Pipelines & Orchestration</h2>
+    <p class="sh-body">The daily craft — building reliable, testable, observable data pipelines that never silently corrupt your data.</p>
+  </div>
+
+  <div class="h2"><div class="h2-num">01</div> ETL vs ELT — The Paradigm Shift</div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🔄</div><div class="panel-head-title">Traditional ETL</div><div class="panel-head-sub">Legacy / On-prem</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Flow</div><div class="prow-val">Extract from source → <strong>Transform in staging server</strong> → Load clean data to destination</div></div>
+        <div class="prow"><div class="prow-key">Pros</div><div class="prow-val">Less data moved to warehouse, transformations before load means lower warehouse cost, can meet compliance (no raw PII in DW)</div></div>
+        <div class="prow"><div class="prow-key">Cons</div><div class="prow-val">Transformation logic hidden in ETL tool (not version-controlled), raw data lost, hard to re-transform, separate compute needed</div></div>
+        <div class="prow"><div class="prow-key">Tools</div><div class="prow-val">Talend, Informatica, SSIS, IBM DataStage, custom Python scripts with transformation logic</div></div>
+        <div class="prow"><div class="prow-key">When to use</div><div class="prow-val">On-prem destinations, strict compliance (no raw data in cloud), legacy infrastructure, compute-heavy pre-load transforms</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🚀</div><div class="panel-head-title">Modern ELT</div><div class="panel-head-sub">Cloud-native default</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Flow</div><div class="prow-val">Extract from source → Load raw data to DW/lake → <strong>Transform inside DW</strong> using SQL (dbt)</div></div>
+        <div class="prow"><div class="prow-key">Pros</div><div class="prow-val">Raw data always available for re-transformation, version-controlled SQL transforms (dbt), leverage DW's compute power (BigQuery, Snowflake scale elastically)</div></div>
+        <div class="prow"><div class="prow-key">Cons</div><div class="prow-val">Raw data (incl. PII) lands in warehouse — requires governance, warehouse storage costs, transform errors affect analysts directly</div></div>
+        <div class="prow"><div class="prow-key">Tools</div><div class="prow-val">Fivetran/Airbyte (EL) + dbt (T) + Snowflake/BigQuery — the modern data stack "golden path"</div></div>
+        <div class="prow"><div class="prow-key">When to use</div><div class="prow-val">Cloud warehouse, need for raw data preservation, iterative transformations, dbt-first teams, cost-effective at scale</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h2"><div class="h2-num">02</div> Apache Airflow — Complete Reference</div>
+  <div class="infobox tip">
+    <span class="infobox-icon">💜</span>
+    <div><strong>Airflow mental model:</strong> Airflow is a <em>workflow scheduler</em>, not a data processing engine. Tasks define "what to run" — the heavy lifting happens inside operators (Spark job, dbt run, Python function). Airflow just coordinates the order, retries, and alerting.</div>
+  </div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🏗️</div><div class="panel-head-title">Core Concepts</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">DAG</div><div class="prow-val">Directed Acyclic Graph — Python file defining workflow. <code>schedule</code> (cron or timetable), <code>start_date</code>, <code>catchup=False</code>, <code>max_active_runs</code>, <code>tags</code>.</div></div>
+        <div class="prow"><div class="prow-key">@task decorator</div><div class="prow-val">TaskFlow API (Airflow 2+) — turns Python functions into tasks. Cleaner than PythonOperator. Use <code>@task.branch</code> for conditional logic.</div></div>
+        <div class="prow"><div class="prow-key">Operators</div><div class="prow-val"><code>BashOperator</code>, <code>PythonOperator</code>, <code>SQLExecuteQueryOperator</code>, <code>SparkSubmitOperator</code>, <code>KubernetesPodOperator</code>, <code>dbtRunOperator</code>, <code>S3CopyObjectOperator</code>.</div></div>
+        <div class="prow"><div class="prow-key">Sensors</div><div class="prow-val">Wait for external condition. <code>S3KeySensor</code> (file arrival), <code>ExternalTaskSensor</code> (upstream DAG), <code>SqlSensor</code> (data present), <code>HttpSensor</code> (API ready).</div></div>
+        <div class="prow"><div class="prow-key">XCom</div><div class="prow-val">Pass small data between tasks. <code>xcom_push()</code> / <code>xcom_pull()</code>. Use for row counts, status flags, file paths — not large data (not designed for that).</div></div>
+        <div class="prow"><div class="prow-key">Dynamic Tasks</div><div class="prow-val"><code>task.expand()</code> — generate N task instances from a list at runtime. Process 50 files in parallel by expanding over a list of S3 keys returned by a previous task.</div></div>
+        <div class="prow"><div class="prow-key">Task Groups</div><div class="prow-val">Visual grouping of related tasks in the Graph view. Logical organization — extract group, transform group, load group. Collapsible in UI.</div></div>
+        <div class="prow"><div class="prow-key">Connections</div><div class="prow-val">Encrypted credentials stored in Airflow. Reference by <code>conn_id</code>. Supports Postgres, S3, Snowflake, Spark, HTTP, SSH. Use Secrets Backend (Vault/AWS SM) in production.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">⚙️</div><div class="panel-head-title">Architecture & Production</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Scheduler</div><div class="prow-val">Parses DAG files every 30s, creates DAGRuns and TaskInstances. Scale with multiple schedulers (HA mode). Never put business logic in the Scheduler.</div></div>
+        <div class="prow"><div class="prow-key">Executors</div><div class="prow-val"><code>LocalExecutor</code> (dev/small scale), <code>CeleryExecutor</code> (distributed workers), <code>KubernetesExecutor</code> (each task = isolated pod, production standard), <code>CeleryKubernetesExecutor</code> (hybrid).</div></div>
+        <div class="prow"><div class="prow-key">Idempotency</div><div class="prow-val"><strong>Critical:</strong> Tasks must produce the same result when rerun. Use <code>execution_date</code> / <code>data_interval_start</code> as the date parameter. Prefer MERGE/UPSERT over INSERT.</div></div>
+        <div class="prow"><div class="prow-key">Retry Config</div><div class="prow-val"><code>retries=3</code>, <code>retry_delay=timedelta(minutes=5)</code>, <code>retry_exponential_backoff=True</code>, <code>max_retry_delay=timedelta(hours=1)</code>. Set at DAG and task level.</div></div>
+        <div class="prow"><div class="prow-key">SLAs & Alerts</div><div class="prow-val"><code>sla=timedelta(hours=2)</code> triggers <code>sla_miss_callback</code>. Use <code>on_failure_callback</code> and <code>on_retry_callback</code> to send Slack/PagerDuty alerts.</div></div>
+        <div class="prow"><div class="prow-key">Managed Options</div><div class="prow-val">MWAA (AWS), Cloud Composer (GCP), Astronomer — avoid managing Airflow infra yourself unless you have dedicated platform team.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h2"><div class="h2-num">03</div> dbt — The Analytics Engineering Standard</div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🌿</div><div class="panel-head-title">dbt Project Architecture</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">staging/</div><div class="prow-val">1:1 with source tables. Light cleaning only: rename columns, cast types, filter deleted records. <strong>Never join here.</strong> Materialized as views (cheap, no storage cost).</div></div>
+        <div class="prow"><div class="prow-key">intermediate/</div><div class="prow-val">Complex joins, business logic, aggregations. Ephemeral or tables. <code>int_orders_with_customers</code>, <code>int_sessions_unioned</code>. Not exposed to BI tools.</div></div>
+        <div class="prow"><div class="prow-key">marts/</div><div class="prow-val">Business-facing final tables. <code>fct_orders</code>, <code>dim_customers</code>, <code>dim_products</code>. Materialized as tables. Exposed to Tableau, Looker, analysts.</div></div>
+        <div class="prow"><div class="prow-key">sources.yml</div><div class="prow-val">Declare raw source tables, add freshness checks (<code>warn_after: 12 hours</code>, <code>error_after: 24 hours</code>), document with descriptions, test with <code>not_null</code>, <code>unique</code>.</div></div>
+        <div class="prow"><div class="prow-key">Incremental Models</div><div class="prow-val"><code>{{ config(materialized='incremental') }}</code> with <code>{{ is_incremental() }}</code> filter. Only process new rows since last run. Essential for fact tables with billions of rows.</div></div>
+        <div class="prow"><div class="prow-key">Snapshots</div><div class="prow-val">SCD Type 2 out-of-the-box. <code>dbt snapshot</code> checks source table for changes and inserts new rows with <code>dbt_valid_from</code> / <code>dbt_valid_to</code> timestamps.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🧪</div><div class="panel-head-title">dbt Testing & CI/CD</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Built-in Tests</div><div class="prow-val"><code>not_null</code>, <code>unique</code>, <code>accepted_values</code>, <code>relationships</code> (referential integrity). Defined in YAML. Run with <code>dbt test</code>.</div></div>
+        <div class="prow"><div class="prow-key">dbt-expectations</div><div class="prow-val">Port of Great Expectations to dbt. <code>expect_column_values_to_be_between</code>, <code>expect_table_row_count_to_be_between</code>, <code>expect_column_to_exist</code> and 50+ more.</div></div>
+        <div class="prow"><div class="prow-key">Custom Tests</div><div class="prow-val">Singular tests (SQL files that return 0 rows on pass), generic tests (Jinja macros). Write a test: <code>test_revenue_positive.sql</code> → <code>SELECT * WHERE revenue &lt; 0</code>.</div></div>
+        <div class="prow"><div class="prow-key">Slim CI</div><div class="prow-val"><code>dbt build --select state:modified+</code> — only test models that changed + downstream. Uses <code>--state</code> with manifest.json from production. 10× faster CI runs.</div></div>
+        <div class="prow"><div class="prow-key">Macros</div><div class="prow-val">Jinja2 templating. <code>{{ ref('model_name') }}</code>, <code>{{ source('schema', 'table') }}</code>, <code>{{ config() }}</code>, <code>{{ run_query() }}</code>, custom macros for DRY SQL.</div></div>
+        <div class="prow"><div class="prow-key">Lineage Graph</div><div class="prow-val"><code>dbt docs generate && dbt docs serve</code> — interactive DAG showing all model dependencies. Essential for impact analysis: "what breaks if I change this table?"</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h2"><div class="h2-num">04</div> Pipeline Design Principles</div>
+  <ul class="checks">
+    <li><span class="checks-icon">◆</span><div><strong>Idempotency:</strong> Running a pipeline twice must produce the same result as running it once. Use UPSERT/MERGE instead of INSERT. Parameterize by execution date — never use <code>NOW()</code> inside pipeline logic.</div></li>
+    <li><span class="checks-icon">◆</span><div><strong>Fail Fast, Fail Loudly:</strong> Validate schemas, row counts, and data types at the start. A pipeline that silently writes wrong data is worse than one that fails immediately.</div></li>
+    <li><span class="checks-icon">◆</span><div><strong>Incremental Processing:</strong> Only process new/changed data. Full-refresh should be an explicit override (<code>--full-refresh</code> flag in dbt), not the default behavior.</div></li>
+    <li><span class="checks-icon">◆</span><div><strong>Decoupled EL + T:</strong> Separate extraction/loading (Fivetran/Airbyte) from transformation (dbt). Each layer can fail, retry, and be monitored independently.</div></li>
+    <li><span class="checks-icon">◆</span><div><strong>Data Contracts:</strong> Define expected schema, types, ranges, and SLAs between producers and consumers. Enforce them at the pipeline boundary — not just at the end.</div></li>
+    <li><span class="checks-icon">◆</span><div><strong>Observability First:</strong> Log row counts, timing, null rates at every stage. You cannot debug what you cannot measure. Build monitoring into the pipeline, not as an afterthought.</div></li>
+    <li><span class="checks-icon">◆</span><div><strong>Backfill-safe Design:</strong> All pipelines should support date-range backfills. Use <code>execution_date</code> context parameter — never hardcode dates or use relative time offsets.</div></li>
+  </ul>
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: DISTRIBUTED SYSTEMS                 -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="distributed">
+<div class="wrap">
+
+  <div class="sh">
+    <div class="sh-tag">Phase 4 · Months 6–9</div>
+    <h2 class="sh-title">Distributed Computing & Streaming</h2>
+    <p class="sh-body">When data outgrows a single machine — Spark for batch at scale, Kafka and Flink for real-time.</p>
+  </div>
+
+  <div class="h2"><div class="h2-num">01</div> Apache Spark Internals</div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">⚡</div><div class="panel-head-title">Execution Model</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Driver Program</div><div class="prow-val">The main JVM process running your application. Creates <code>SparkSession</code>, builds logical and physical plans, communicates with cluster manager (YARN/K8s/Mesos).</div></div>
+        <div class="prow"><div class="prow-key">Executors</div><div class="prow-val">JVM processes on worker nodes. Execute tasks, store cached data in memory/disk. Each executor has N cores (task slots) and M GB memory. Fail independently — driver reschedules lost tasks.</div></div>
+        <div class="prow"><div class="prow-key">Lazy Evaluation</div><div class="prow-val">Transformations (<code>filter</code>, <code>map</code>, <code>join</code>) build a logical plan. Nothing executes until an <strong>action</strong> (<code>count()</code>, <code>collect()</code>, <code>write()</code>). Enables Catalyst to optimize the full plan.</div></div>
+        <div class="prow"><div class="prow-key">Stages & Tasks</div><div class="prow-val">DAG Scheduler splits logical plan into <strong>stages</strong> at shuffle boundaries. Each stage = set of tasks (one per partition). Task = work on one partition on one executor.</div></div>
+        <div class="prow"><div class="prow-key">Shuffle</div><div class="prow-val">Most expensive operation. Triggered by <code>groupBy</code>, <code>join</code>, <code>repartition</code>. Data written to disk and sent across network. Minimize shuffles — they dominate job runtime.</div></div>
+        <div class="prow"><div class="prow-key">Catalyst Optimizer</div><div class="prow-val">SQL/DataFrame query optimizer. Performs predicate pushdown, projection pruning, constant folding, join reordering. Always use DataFrames/SQL (not RDDs) to leverage Catalyst.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🔧</div><div class="panel-head-title">Performance Tuning</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Partition Size</div><div class="prow-val">Target 128–256MB per partition. <code>spark.sql.shuffle.partitions</code> (default 200 — usually wrong). Use <code>repartition(n)</code> to increase, <code>coalesce(n)</code> to decrease (no shuffle).</div></div>
+        <div class="prow"><div class="prow-key">Broadcast Join</div><div class="prow-val"><code>broadcast(small_df)</code> — ship small table (&lt;10MB) to every executor. Eliminates shuffle for join. Threshold: <code>spark.sql.autoBroadcastJoinThreshold</code> (default 10MB).</div></div>
+        <div class="prow"><div class="prow-key">Data Skew</div><div class="prow-val">Hot partitions = one executor does 95% of work. Fix: salting (add random prefix to key), AQE skew join optimization (Spark 3+), <code>skewHint</code> in Spark SQL.</div></div>
+        <div class="prow"><div class="prow-key">AQE (Spark 3+)</div><div class="prow-val">Adaptive Query Execution. Dynamically: (1) coalesces small shuffle partitions, (2) converts sort-merge joins to broadcast, (3) handles skew joins. Enable: <code>spark.sql.adaptive.enabled=true</code>.</div></div>
+        <div class="prow"><div class="prow-key">Caching</div><div class="prow-val"><code>df.cache()</code> = MEMORY_AND_DISK. <code>df.persist(StorageLevel.MEMORY_ONLY)</code> for fast access. Unpersist when done. Only cache if reused 2+ times.</div></div>
+        <div class="prow"><div class="prow-key">Small Files Problem</div><div class="prow-val">Millions of tiny files → slow listing + metadata overhead. Use <code>coalesce()</code> before writing. Enable auto-compaction in Delta Lake. Write with <code>maxRecordsPerFile</code>.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h2"><div class="h2-num">02</div> Apache Kafka Architecture</div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">📡</div><div class="panel-head-title">Core Concepts</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Topic</div><div class="prow-val">Named, ordered stream of records. Created with replication factor and partition count. Think of it as a distributed, persistent, append-only log.</div></div>
+        <div class="prow"><div class="prow-key">Partition</div><div class="prow-val">Unit of parallelism. Records within a partition are ordered. Records across partitions are not. Partition count = max consumer parallelism. <strong>Cannot decrease after creation.</strong></div></div>
+        <div class="prow"><div class="prow-key">Consumer Group</div><div class="prow-val">Multiple consumers sharing workload. Each partition assigned to exactly one consumer in group. Add consumers to scale out. Consumers &gt; partitions = idle consumers.</div></div>
+        <div class="prow"><div class="prow-key">Offsets</div><div class="prow-val">Sequential integer tracking position in partition. Committed by consumer to <code>__consumer_offsets</code> topic. Reset with <code>auto.offset.reset=earliest</code> to reprocess from beginning.</div></div>
+        <div class="prow"><div class="prow-key">Replication</div><div class="prow-val">Each partition has one <strong>Leader</strong> (handles reads/writes) and N-1 <strong>Followers</strong> (ISR — In-Sync Replicas). Leader failure → ISR follower elected leader. Set <code>acks=all</code> for durability.</div></div>
+        <div class="prow"><div class="prow-key">Schema Registry</div><div class="prow-val">Confluent Schema Registry stores Avro/Protobuf/JSON schemas. Enforces schema compatibility on produce. Decouples schema from message payload — just store schema ID (4 bytes).</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🌊</div><div class="panel-head-title">Streaming Windowing & State</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Tumbling Window</div><div class="prow-val">Fixed, non-overlapping time buckets. "Revenue per hour" = 1h tumbling window. Each event belongs to exactly one window. Simple and predictable.</div></div>
+        <div class="prow"><div class="prow-key">Sliding Window</div><div class="prow-val">Overlapping windows that advance by a slide interval. "Last 5 min, updated every 1 min" = 5m window sliding by 1m. Each event can belong to multiple windows.</div></div>
+        <div class="prow"><div class="prow-key">Session Window</div><div class="prow-val">Dynamic windows based on activity gaps. A session closes after N minutes of inactivity. Powerful for user behavior analytics — natural session boundaries without fixed times.</div></div>
+        <div class="prow"><div class="prow-key">Watermarks</div><div class="prow-val">Max tolerated event lateness. <code>withWatermark("timestamp", "10 minutes")</code> — Flink/Spark will wait 10 min for late data before finalizing a window. Trade latency for accuracy.</div></div>
+        <div class="prow"><div class="prow-key">Event Time vs Processing Time</div><div class="prow-val"><strong>Event time</strong>: when the event actually occurred (in the data). <strong>Processing time</strong>: when Spark/Flink receives it. Always use event time for accurate analytics. Handle out-of-order events with watermarks.</div></div>
+        <div class="prow"><div class="prow-key">Exactly-Once</div><div class="prow-val">Kafka: idempotent producers + transactional APIs. Flink: checkpointing + 2-phase commit to Kafka sink. Spark Structured Streaming: checkpointing + idempotent sinks (write-ahead log).</div></div>
+      </div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: CLOUD                               -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="cloud">
+<div class="wrap">
+
+  <div class="sh">
+    <div class="sh-tag">Phase 5 · Months 9–12</div>
+    <h2 class="sh-title">Cloud Platforms & DevOps</h2>
+    <p class="sh-body">Modern data engineering is cloud-native. Master one cloud platform deeply, understand the others broadly.</p>
+  </div>
+
+  <div class="h2"><div class="h2-num">01</div> AWS vs GCP vs Azure — Data Services</div>
+  <div style="border-radius:16px;overflow:hidden;border:1px solid var(--line); margin-bottom:24px;">
+  <table class="ctable">
+    <thead><tr><th>Service Type</th><th>🟠 AWS</th><th>🔵 GCP</th><th>🔷 Azure</th></tr></thead>
+    <tbody>
+      <tr><td>Object Storage</td><td>S3 (Simple Storage Service)</td><td>GCS (Cloud Storage)</td><td>ADLS Gen2 / Blob Storage</td></tr>
+      <tr><td>Data Warehouse</td><td>Redshift (Columnar MPP)</td><td>BigQuery (Serverless)</td><td>Synapse Analytics</td></tr>
+      <tr><td>Managed Spark</td><td>EMR (+ EMR Serverless)</td><td>Dataproc (+ Serverless)</td><td>HDInsight / Synapse Spark</td></tr>
+      <tr><td>Serverless ETL</td><td>AWS Glue (Spark-based)</td><td>Cloud Dataflow (Beam)</td><td>Azure Data Factory (ADF)</td></tr>
+      <tr><td>Event Streaming</td><td>Kinesis (Data Streams)</td><td>Cloud Pub/Sub</td><td>Azure Event Hubs</td></tr>
+      <tr><td>Delivery Stream</td><td>Kinesis Firehose</td><td>Datastream (CDC)</td><td>Event Hubs Capture</td></tr>
+      <tr><td>Metadata / Catalog</td><td>Glue Data Catalog</td><td>Dataplex / Data Catalog</td><td>Microsoft Purview</td></tr>
+      <tr><td>Orchestration</td><td>MWAA (Managed Airflow)</td><td>Cloud Composer (Airflow)</td><td>Azure Managed Airflow</td></tr>
+      <tr><td>Query Engine</td><td>Athena (Presto on S3)</td><td>BigQuery (built-in)</td><td>Synapse Serverless SQL</td></tr>
+      <tr><td>Access Control</td><td>IAM + Lake Formation</td><td>IAM + Dataplex</td><td>Azure AD + Purview</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="infobox info">
+    <span class="infobox-icon">🎯</span>
+    <div><strong>Which cloud to learn first?</strong> AWS has the largest market share (~31%). GCP has the best managed data services (BigQuery is exceptional). Azure dominates enterprise/Microsoft shops. Pick based on your target company's stack. Get certified: AWS Solutions Architect Associate, GCP Professional Data Engineer, or Azure Data Engineer Associate.</div>
+  </div>
+
+  <div class="h2"><div class="h2-num">02</div> Docker for Data Engineers</div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🐳</div><div class="panel-head-title">Docker Essentials</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Dockerfile</div><div class="prow-val"><code>FROM python:3.11-slim</code>, <code>WORKDIR /app</code>, <code>COPY requirements.txt .</code>, <code>RUN pip install --no-cache-dir -r requirements.txt</code>, <code>COPY . .</code>, <code>CMD ["python", "pipeline.py"]</code></div></div>
+        <div class="prow"><div class="prow-key">Multi-stage Builds</div><div class="prow-val">Build stage (with build tools) → Runtime stage (copy only what's needed). Reduces final image size from 2GB → 200MB. Critical for production images.</div></div>
+        <div class="prow"><div class="prow-key">docker-compose</div><div class="prow-val">Spin up Airflow + Postgres + Redis locally with one YAML file. Official <code>docker-compose.yaml</code> from Apache Airflow — standard local dev setup for every data engineer.</div></div>
+        <div class="prow"><div class="prow-key">Volumes</div><div class="prow-val">Mount local code into container (<code>./dags:/opt/airflow/dags</code>). Persist database data across container restarts. Named volumes for production persistence.</div></div>
+        <div class="prow"><div class="prow-key">Environment Variables</div><div class="prow-val"><code>.env</code> file with <code>env_file: .env</code> in compose. Never hardcode credentials in Dockerfiles. Use Docker secrets or cloud secrets manager for production.</div></div>
+        <div class="prow"><div class="prow-key">Registry</div><div class="prow-val">Push to ECR (AWS), GCR (GCP), or ACR (Azure). CI pipeline: <code>docker build</code> → tag with git SHA → <code>docker push</code> → deploy K8s with new image tag.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">⚓</div><div class="panel-head-title">Kubernetes for Data Engineers</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Pod</div><div class="prow-val">Smallest deployable unit. 1+ containers sharing network namespace and storage volumes. Pods are ephemeral — they can be killed and rescheduled at any time.</div></div>
+        <div class="prow"><div class="prow-key">Deployment</div><div class="prow-val">Manages a set of identical pods (replicas). Handles rolling updates, rollbacks. Use for Airflow webserver, API services. <code>kubectl rollout status deployment/airflow-web</code></div></div>
+        <div class="prow"><div class="prow-key">ConfigMap / Secret</div><div class="prow-val">Externalize configuration and credentials. <code>secretKeyRef</code> injects secret as env var. Secrets can sync from AWS Secrets Manager via External Secrets Operator.</div></div>
+        <div class="prow"><div class="prow-key">KubernetesExecutor</div><div class="prow-val">Airflow launches a K8s pod per task. Complete isolation, scales to zero, no worker fleet to manage. Each task gets its own CPU/memory. Production standard at scale.</div></div>
+        <div class="prow"><div class="prow-key">Spark on K8s</div><div class="prow-val">Driver pod + dynamically provisioned executor pods. <code>spark.kubernetes.container.image</code>. Use Spark Operator (Google) for declarative Spark job management.</div></div>
+        <div class="prow"><div class="prow-key">Helm</div><div class="prow-val">Package manager for K8s. Official Helm charts for Airflow, Kafka (Bitnami), Spark. Parameterize with <code>values.yaml</code>. Manage upgrades: <code>helm upgrade --install</code>.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h2"><div class="h2-num">03</div> Infrastructure as Code with Terraform</div>
+  <div class="codeblock">
+<span class="cm"># Example: Provision a BigQuery dataset and GCS bucket</span>
+
+<span class="kw">provider</span> <span class="str">"google"</span> {
+  project = <span class="kw">var</span>.project_id
+  region  = <span class="str">"us-central1"</span>
+}
+
+<span class="kw">resource</span> <span class="str">"google_storage_bucket"</span> <span class="str">"data_lake"</span> {
+  name          = <span class="str">"${var.project_id}-data-lake"</span>
+  location      = <span class="str">"US"</span>
+  force_destroy = <span class="kw">false</span>
+
+  lifecycle_rule {
+    condition { age = <span class="num">365</span> }
+    action    { type = <span class="str">"SetStorageClass"</span>; storage_class = <span class="str">"COLDLINE"</span> }
+  }
+}
+
+<span class="kw">resource</span> <span class="str">"google_bigquery_dataset"</span> <span class="str">"warehouse"</span> {
+  dataset_id = <span class="str">"prod_warehouse"</span>
+  location   = <span class="str">"US"</span>
+  labels     = { env = <span class="str">"production"</span> }
+}
+  </div>
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: GOVERNANCE                          -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="governance">
+<div class="wrap">
+
+  <div class="sh">
+    <div class="sh-tag">Phase 6–7 · Months 12+</div>
+    <h2 class="sh-title">Data Quality & Governance</h2>
+    <p class="sh-body">Data that can't be trusted is worse than no data. Quality and governance are engineering, not administration.</p>
+  </div>
+
+  <div class="h2"><div class="h2-num">01</div> Data Quality Framework</div>
+  <div class="infobox warn">
+    <span class="infobox-icon">⚠️</span>
+    <div><strong>The silent killer:</strong> Most data quality issues don't crash pipelines — they silently produce wrong results that analysts trust for months. Data quality monitoring must be automated and built into the pipeline, not checked manually after the fact.</div>
+  </div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">✅</div><div class="panel-head-title">The 5 Dimensions of Data Quality</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Freshness</div><div class="prow-val">Was the data updated on time? Check <code>MAX(updated_at) > NOW() - INTERVAL '24 hours'</code>. Set freshness SLAs per table. Alert when violated.</div></div>
+        <div class="prow"><div class="prow-key">Completeness</div><div class="prow-val">Are expected columns populated? Null rates should be stable. Alert on sudden spikes in null rates — often indicates upstream schema change or pipeline failure.</div></div>
+        <div class="prow"><div class="prow-key">Validity</div><div class="prow-val">Are values within expected ranges? Revenue &gt; 0. Email addresses match regex. Dates are not in the future. Categorical columns match accepted set of values.</div></div>
+        <div class="prow"><div class="prow-key">Consistency</div><div class="prow-val">Does data agree across systems? Total orders in orders table = sum of order lines. Revenue in sales DB = revenue in warehouse. Cross-table referential integrity.</div></div>
+        <div class="prow"><div class="prow-key">Uniqueness</div><div class="prow-val">Are expected unique keys actually unique? Duplicate order IDs are catastrophic. Run <code>COUNT(*) != COUNT(DISTINCT id)</code> checks after every pipeline run.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🧪</div><div class="panel-head-title">Tooling</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Great Expectations</div><div class="prow-val">Python library. Define <strong>Expectation Suites</strong>, run against DataFrame or SQL. Generates HTML Data Docs. Integrates as Airflow operator. Rich built-in expectations library.</div></div>
+        <div class="prow"><div class="prow-key">Soda Core</div><div class="prow-val">YAML-based data checks. Simpler to write than GE, directly against SQL. <code>soda scan</code> in CI/CD. Soda Cloud for centralized monitoring and alerting dashboard.</div></div>
+        <div class="prow"><div class="prow-key">dbt Tests</div><div class="prow-val">For warehouse tables: built-in + dbt-expectations. Run in CI. <code>dbt build</code> = models + tests together. First line of defense for transform layer correctness.</div></div>
+        <div class="prow"><div class="prow-key">Monte Carlo</div><div class="prow-val">ML-based data observability SaaS. Automatically detects anomalies in volume, schema, and distributions without writing explicit rules. Generates lineage automatically.</div></div>
+        <div class="prow"><div class="prow-key">Custom Monitors</div><div class="prow-val">Row count trends, null rate time-series, distribution drift detection (KL divergence / Z-score). Store daily metrics in monitoring table. Alert via PagerDuty/Slack webhook.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h2"><div class="h2-num">02</div> Data Contracts</div>
+  <div class="infobox tip">
+    <span class="infobox-icon">📄</span>
+    <div><strong>Data Contracts</strong> are formal agreements between data producers (engineers who generate data) and data consumers (analysts, other pipelines). They define: schema, SLA (freshness), quality expectations, and ownership. Violations break the pipeline early — before bad data reaches downstream consumers.</div>
+  </div>
+  <div class="codeblock">
+<span class="cm"># Data Contract Example (YAML)</span>
+<span class="kw">name:</span> <span class="str">orders</span>
+<span class="kw">version:</span> <span class="str">"2.1.0"</span>
+<span class="kw">owner:</span> <span class="str">data-platform@company.com</span>
+
+<span class="kw">schema:</span>
+  - <span class="kw">name:</span> order_id    <span class="kw">type:</span> STRING   <span class="kw">nullable:</span> <span class="kw">false</span>  <span class="kw">unique:</span> <span class="kw">true</span>
+  - <span class="kw">name:</span> customer_id <span class="kw">type:</span> STRING   <span class="kw">nullable:</span> <span class="kw">false</span>
+  - <span class="kw">name:</span> amount      <span class="kw">type:</span> DECIMAL  <span class="kw">minimum:</span> <span class="num">0</span>
+  - <span class="kw">name:</span> created_at  <span class="kw">type:</span> TIMESTAMP <span class="kw">nullable:</span> <span class="kw">false</span>
+
+<span class="kw">quality:</span>
+  - <span class="kw">rule:</span> row_count_minimum   <span class="kw">value:</span> <span class="num">1000</span>      <span class="cm"># per day</span>
+  - <span class="kw">rule:</span> null_rate_maximum   <span class="kw">column:</span> customer_id  <span class="kw">value:</span> <span class="num">0.0</span>
+  - <span class="kw">rule:</span> freshness_maximum   <span class="kw">value:</span> <span class="str">"6 hours"</span>
+
+<span class="kw">sla:</span>  <span class="str">"08:00 UTC daily"</span>
+  </div>
+
+  <div class="h2"><div class="h2-num">03</div> Apache Iceberg — Deep Dive</div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🧊</div><div class="panel-head-title">Iceberg Architecture</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Catalog Layer</div><div class="prow-val">Stores pointer to current metadata. Options: Hive Metastore, AWS Glue Catalog, REST Catalog, JDBC. Enables atomic table swaps (pointer update is atomic).</div></div>
+        <div class="prow"><div class="prow-key">Metadata Files</div><div class="prow-val">JSON files tracking table schema history, partition specs, snapshot history, sort orders. Each write creates a new metadata file. Enables schema/partition evolution without rewriting data.</div></div>
+        <div class="prow"><div class="prow-key">Manifest Lists</div><div class="prow-val">Each snapshot has a manifest list file referencing multiple manifest files. Stores partition-level stats (min/max values) for partition pruning without reading data files.</div></div>
+        <div class="prow"><div class="prow-key">Manifest Files</div><div class="prow-val">Track which data files belong to a snapshot. Store column-level stats per file (null count, lower/upper bounds) — enables aggressive file skipping at query time.</div></div>
+        <div class="prow"><div class="prow-key">Data Files</div><div class="prow-val">Actual Parquet (default), Avro, or ORC files in your object store. Immutable once written. Old files cleaned up by <code>expire_snapshots</code> + <code>remove_orphan_files</code> procedures.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">✨</div><div class="panel-head-title">Key Capabilities</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Time Travel</div><div class="prow-val"><code>SELECT * FROM orders FOR SYSTEM_TIME AS OF '2025-01-01'</code> or <code>VERSION AS OF 12345</code>. Query any historical snapshot. Great for debugging bad data loads.</div></div>
+        <div class="prow"><div class="prow-key">Schema Evolution</div><div class="prow-val">Add, rename, reorder, drop, promote-to-struct columns — <strong>without rewriting data</strong>. Column IDs (not names) track columns. Old files remain valid.</div></div>
+        <div class="prow"><div class="prow-key">Partition Evolution</div><div class="prow-val">Change partition strategy (e.g. day → hour) without migrating existing data. Old data uses old partition spec; new data uses new spec. Transparent to query engines.</div></div>
+        <div class="prow"><div class="prow-key">Row-Level Changes</div><div class="prow-val"><code>MERGE INTO</code>, <code>UPDATE</code>, <code>DELETE</code> — previously impossible on data lakes. Stored as: copy-on-write (rewrites files) or merge-on-read (append delete files, merge at read).</div></div>
+        <div class="prow"><div class="prow-key">ACID Transactions</div><div class="prow-val">Optimistic concurrency control. Concurrent writers use snapshot isolation — each sees consistent view. Commit conflict detection prevents lost updates.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: TOOLS                               -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="tools">
+<div class="wrap">
+
+  <div class="sh">
+    <div class="sh-tag">Full Arsenal</div>
+    <h2 class="sh-title">Tools & Technologies</h2>
+    <p class="sh-body">Every major tool in the data engineering ecosystem — categorized and evaluated.</p>
+  </div>
+
+  <div class="h2"><div class="h2-num">01</div> Ingestion & Integration</div>
+  <div class="grid g4">
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🔌</div><div class="tc-name">Fivetran</div></div><div class="tc-cat">Managed ELT Connector</div><div class="tc-desc">500+ pre-built connectors. Automated schema migration, incremental syncs, built-in transformations. Best option when budget allows — saves weeks of pipeline work.</div><div class="tc-when">✦ When: moving quickly, many SaaS sources</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🌊</div><div class="tc-name">Airbyte</div></div><div class="tc-cat">Open-Source ELT</div><div class="tc-desc">OSS Fivetran alternative. Self-hosted or Airbyte Cloud. Python/low-code Connector Builder for custom sources. 300+ community connectors.</div><div class="tc-when">✦ When: cost-sensitive, custom sources needed</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">📡</div><div class="tc-name">Apache Kafka</div></div><div class="tc-cat">Event Streaming Platform</div><div class="tc-desc">The industry standard for real-time event streaming. Durable, scalable, fault-tolerant. Confluent Cloud for managed. Use Kafka Connect for source/sink connectors.</div><div class="tc-when">✦ When: real-time, event-driven, &gt;100K events/sec</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🔄</div><div class="tc-name">Debezium</div></div><div class="tc-cat">Change Data Capture</div><div class="tc-desc">Captures row-level database changes from MySQL, PostgreSQL, MongoDB, Oracle via binlog/WAL. Publishes to Kafka topics. Real-time CDC with exactly-once guarantees.</div><div class="tc-when">✦ When: real-time DB replication, CDC pipelines</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🪣</div><div class="tc-name">AWS Glue</div></div><div class="tc-cat">Serverless ETL (AWS)</div><div class="tc-desc">Serverless Spark ETL + Glue Data Catalog (Hive-compatible metadata store). Crawlers auto-discover schemas from S3. DynamicFrames for flexible schema handling.</div><div class="tc-when">✦ When: AWS-native, serverless Spark needed</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🌊</div><div class="tc-name">Dataflow (GCP)</div></div><div class="tc-cat">Managed Apache Beam</div><div class="tc-desc">Fully managed batch + streaming on Apache Beam. Unified programming model — same code for batch and stream. Auto-scaling, no cluster management.</div><div class="tc-when">✦ When: GCP ecosystem, unified batch+stream</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🏭</div><div class="tc-name">Azure Data Factory</div></div><div class="tc-cat">Azure ETL/Orchestration</div><div class="tc-desc">Visual low-code ETL pipelines. 100+ built-in connectors. Mapping Data Flows (Spark-based). Integrates with Synapse, ADLS. Dominant in Microsoft/enterprise shops.</div><div class="tc-when">✦ When: Azure-native data platform</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🔗</div><div class="tc-name">Singer/Meltano</div></div><div class="tc-cat">Open-Source Tap/Target</div><div class="tc-desc">Singer is a spec for source taps and destination targets. Meltano wraps Singer with project management, CI/CD. Free alternative to Fivetran for small teams.</div><div class="tc-when">✦ When: open-source, self-hosted, Singer ecosystem</div></div>
+  </div>
+
+  <div class="h2"><div class="h2-num">02</div> Orchestration</div>
+  <div class="grid g4">
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🌀</div><div class="tc-name">Apache Airflow</div></div><div class="tc-cat">Industry Standard Orchestrator</div><div class="tc-desc">Python DAGs, huge provider ecosystem, mature UI, MWAA/Cloud Composer/Astronomer managed. Steep learning curve. Default choice for most companies.</div><div class="tc-when">✦ When: team knows Python, complex dependencies</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🌊</div><div class="tc-name">Prefect</div></div><div class="tc-cat">Modern Workflow Orchestration</div><div class="tc-desc">Python-first, dynamic workflows, excellent DX vs Airflow. Decorators-based (@flow, @task). Prefect Cloud for UI + monitoring. No YAML needed.</div><div class="tc-when">✦ When: Airflow feels heavyweight, Python-centric team</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">⚙️</div><div class="tc-name">Dagster</div></div><div class="tc-cat">Asset-Based Orchestration</div><div class="tc-desc">Think in <em>assets</em> (tables, files, models) not tasks. Built-in lineage, partitioning, backfill UI, type system. Excellent for dbt + Spark integrations.</div><div class="tc-when">✦ When: asset-centric thinking, modern data stack</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🔱</div><div class="tc-name">Luigi (legacy)</div></div><div class="tc-cat">Task Pipeline Framework</div><div class="tc-desc">Spotify's original pipeline framework. Dependency-based, Python tasks, simple file targets. Largely superseded by Airflow/Prefect but still in legacy codebases.</div><div class="tc-when">✦ When: maintaining legacy Luigi pipelines</div></div>
+  </div>
+
+  <div class="h2"><div class="h2-num">03</div> Processing & Query Engines</div>
+  <div class="grid g4">
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">⚡</div><div class="tc-name">Apache Spark</div></div><div class="tc-cat">Distributed Batch + Streaming</div><div class="tc-desc">The dominant distributed engine. PySpark API, Spark SQL, Structured Streaming. Databricks for managed. MLlib for ML at scale. Industry standard for large-scale ETL.</div><div class="tc-when">✦ When: &gt;1TB data, Databricks environment</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🌊</div><div class="tc-name">Apache Flink</div></div><div class="tc-cat">True Stream Processing</div><div class="tc-desc">Stateful stream processing with millisecond latency. Better streaming semantics than Spark. Flink SQL, complex event processing. Used by Uber, Alibaba, LinkedIn.</div><div class="tc-when">✦ When: low-latency stream processing, complex state</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🦆</div><div class="tc-name">DuckDB</div></div><div class="tc-cat">Embedded OLAP Engine</div><div class="tc-desc">In-process columnar analytics. Query Parquet/CSV/JSON with SQL. No cluster, no setup. 10–100× faster than Pandas for analytical queries. The best kept secret in data engineering.</div><div class="tc-when">✦ When: &lt;50GB, local dev, pipeline testing, EDA</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🔍</div><div class="tc-name">Trino (Presto)</div></div><div class="tc-cat">Federated SQL Query Engine</div><div class="tc-desc">Query across Hive, S3 (Iceberg/Hudi/Delta), Cassandra, Kafka, RDBMS with a single SQL. MPP architecture, sub-minute interactive queries on data lake. Starburst for enterprise.</div><div class="tc-when">✦ When: query federation, interactive lake queries</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🐻</div><div class="tc-name">Polars</div></div><div class="tc-cat">Fast DataFrame Library</div><div class="tc-desc">Rust-based DataFrame library for Python. Lazy evaluation with query optimizer, multi-threaded. 5–50× faster than Pandas. Arrow-native. Ideal for single-node pipeline processing.</div><div class="tc-when">✦ When: replace Pandas, single-node but large data</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🗄️</div><div class="tc-name">ClickHouse</div></div><div class="tc-cat">Real-Time Analytics DB</div><div class="tc-desc">Columnar OLAP DB for real-time analytics. Blazing fast aggregations (billions rows in milliseconds). Ideal for observability, time-series, user-facing analytics. ClickHouse Cloud managed option.</div><div class="tc-when">✦ When: real-time analytics serving, sub-second queries</div></div>
+  </div>
+
+  <div class="h2"><div class="h2-num">04</div> Warehouses & Lakehouse</div>
+  <div class="grid g4">
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">❄️</div><div class="tc-name">Snowflake</div></div><div class="tc-cat">Cloud Data Warehouse</div><div class="tc-desc">Separate compute/storage, instant scale, zero-copy cloning, data sharing, multi-cloud (AWS/GCP/Azure). Snowpark for Python/Java UDFs. Market leader in cloud DW.</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🔵</div><div class="tc-name">BigQuery</div></div><div class="tc-cat">Serverless Warehouse (GCP)</div><div class="tc-desc">Serverless — no cluster to manage. Per-query ($5/TB) or flat-rate pricing. Excellent at scale, Omni for multi-cloud, BQML, BigQuery Omni, native Iceberg support.</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🔶</div><div class="tc-name">Databricks</div></div><div class="tc-cat">Lakehouse Platform</div><div class="tc-desc">Spark + Delta Lake + MLflow + Unity Catalog. Delta Sharing for data exchange. Photon engine (C++ vectorized execution). Market leader in unified analytics.</div></div>
+    <div class="toolcard"><div class="tc-top"><div class="tc-emoji">🟠</div><div class="tc-name">Amazon Redshift</div></div><div class="tc-cat">Cloud MPP Warehouse</div><div class="tc-desc">Columnar MPP warehouse. RA3 nodes with managed storage. Redshift Spectrum for S3 queries. Serverless Redshift option. Deep AWS ecosystem integration.</div></div>
+  </div>
+
+</div></div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--  PAGE: CAREER                              -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="page" id="career">
+<div class="wrap">
+
+  <div class="sh">
+    <div class="sh-tag">Career Path</div>
+    <h2 class="sh-title">Career & Compensation</h2>
+    <p class="sh-body">Salary benchmarks, interview preparation, portfolio projects, and career progression.</p>
+  </div>
+
+  <div class="h2"><div class="h2-num">01</div> Salary Benchmarks (2025, Total Compensation)</div>
+  <div style="border-radius:16px;overflow:hidden;border:1px solid var(--line); margin-bottom:8px;">
+  <table class="stable">
+    <thead><tr><th>Level</th><th>Experience</th><th>US (FAANG/Tech)</th><th>US (Startup/Mid)</th><th>UK (London)</th><th>India (Tier 1)</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Junior Data Engineer</td>
+        <td class="yoe">0–2 yrs</td>
+        <td class="salary">$90K – $140K</td>
+        <td class="salary">$75K – $110K</td>
+        <td>£45K – £65K</td>
+        <td>₹8L – ₹18L</td>
+      </tr>
+      <tr>
+        <td>Mid-Level Data Engineer</td>
+        <td class="yoe">2–5 yrs</td>
+        <td class="salary">$150K – $220K</td>
+        <td class="salary">$115K – $160K</td>
+        <td>£65K – £95K</td>
+        <td>₹18L – ₹40L</td>
+      </tr>
+      <tr>
+        <td>Senior Data Engineer</td>
+        <td class="yoe">5–8 yrs</td>
+        <td class="salary">$200K – $320K</td>
+        <td class="salary">$155K – $210K</td>
+        <td>£90K – £135K</td>
+        <td>₹40L – ₹80L</td>
+      </tr>
+      <tr>
+        <td>Staff Data Engineer</td>
+        <td class="yoe">8–12 yrs</td>
+        <td class="salary">$280K – $420K</td>
+        <td class="salary">$200K – $280K</td>
+        <td>£130K – £180K</td>
+        <td>₹70L – ₹130L</td>
+      </tr>
+      <tr>
+        <td>Principal / Architect</td>
+        <td class="yoe">12+ yrs</td>
+        <td class="salary">$380K – $600K+</td>
+        <td class="salary">$250K – $380K</td>
+        <td>£160K – £250K+</td>
+        <td>₹100L – ₹200L+</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="infobox info"><span class="infobox-icon">ℹ️</span><div>US figures include base + equity + bonus. FAANG/large tech has higher equity (RSUs). Verify current rates on Levels.fyi, Glassdoor, and LinkedIn Salary. Remote roles often pay SF/NYC rates regardless of location.</div></div>
+
+  <div class="h2"><div class="h2-num">02</div> Interview Preparation</div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">📝</div><div class="panel-head-title">SQL Interviews — What to Expect</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Window Functions</div><div class="prow-val">RANK, DENSE_RANK, ROW_NUMBER, LAG/LEAD, running totals, moving averages. "Find users who logged in 3+ consecutive days" = classic window function problem.</div></div>
+        <div class="prow"><div class="prow-key">Complex JOINs</div><div class="prow-val">Self joins, non-equi joins, LEFT JOIN with NULLs, JOIN vs subquery performance. "Find customers with no orders" — know multiple approaches.</div></div>
+        <div class="prow"><div class="prow-key">Aggregations</div><div class="prow-val">GROUP BY + HAVING, ROLLUP/CUBE, GROUPING SETS. Percentile functions (<code>PERCENTILE_CONT</code>). Median calculation without built-in function.</div></div>
+        <div class="prow"><div class="prow-key">Practice Resources</div><div class="prow-val">DataLemur (DE-specific), StrataScratch (real interview questions), LeetCode SQL (Hard), Mode Analytics SQL Tutorial, pgexercises.com</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🏗️</div><div class="panel-head-title">System Design — Common Questions</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Real-time pipeline</div><div class="prow-val">"Design a pipeline to ingest 1M events/sec from mobile apps and make them queryable in &lt;60 seconds." Answer: Kafka → Flink/Spark Streaming → ClickHouse/BigQuery.</div></div>
+        <div class="prow"><div class="prow-key">Batch warehouse</div><div class="prow-val">"Design a daily ETL pipeline for 50 source systems into a data warehouse with SLA of 8AM delivery." Cover: ingestion, orchestration, monitoring, failure recovery.</div></div>
+        <div class="prow"><div class="prow-key">Data modeling</div><div class="prow-val">"Model an e-commerce data warehouse. What fact and dimension tables would you create?" Walk through: define grain, identify dims (customer, product, date, geography), define SCD types.</div></div>
+        <div class="prow"><div class="prow-key">Trade-off thinking</div><div class="prow-val">Interviewers want you to articulate: batch vs streaming trade-offs, normalized vs denormalized, cost vs performance, build vs buy. There's no single right answer — show reasoning.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h2"><div class="h2-num">03</div> Portfolio Projects to Build</div>
+  <ul class="checks">
+    <li><span class="checks-icon">◆</span><div><strong>End-to-End Batch Pipeline:</strong> Ingest a public dataset (NYC Taxi, Spotify API, GitHub Archive) → S3/GCS → PySpark/dbt transform → Snowflake/BigQuery → Metabase dashboard. Deploy Airflow in Docker. Add Great Expectations tests.</div></li>
+    <li><span class="checks-icon">◆</span><div><strong>Real-Time Streaming Pipeline:</strong> Produce events to Kafka → Flink/Spark Structured Streaming → aggregate into ClickHouse or BigQuery → live Grafana/Metabase dashboard. Use crypto prices, weather API, or fake event generator.</div></li>
+    <li><span class="checks-icon">◆</span><div><strong>Lakehouse on S3:</strong> Create Apache Iceberg or Delta tables on S3. Demonstrate time-travel queries, schema evolution (add/rename columns), MERGE operations, partition evolution. Document performance vs plain Parquet.</div></li>
+    <li><span class="checks-icon">◆</span><div><strong>dbt + Airflow Project:</strong> Full ELT stack — Airflow triggers Fivetran sync → dbt run/test → Great Expectations validation → Slack alert on failure. Apply Kimball dimensional modeling. Deployed on Docker Compose.</div></li>
+    <li><span class="checks-icon">◆</span><div><strong>Infrastructure as Code:</strong> Terraform a complete cloud data stack (S3 + Glue + Redshift or GCS + BigQuery + Dataproc). GitHub Actions pipeline: lint → test → apply. Demonstrate state management and workspace separation (dev/prod).</div></li>
+    <li><span class="checks-icon">◆</span><div><strong>Data Quality Framework:</strong> Build comprehensive monitoring on an existing pipeline — row count trends, null rate monitoring, schema change detection, distribution drift alerts. Custom Grafana dashboard. Publish a blog post explaining your approach.</div></li>
+  </ul>
+
+  <div class="h2"><div class="h2-num">04</div> Career Progression</div>
+  <div class="grid g2">
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">📈</div><div class="panel-head-title">Individual Contributor Track</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Junior (0–2y)</div><div class="prow-val">Execute well-scoped tasks. Build pipelines from templates. Fix bugs. Learn the existing stack. Contribute to code reviews. Ask many questions — this is expected.</div></div>
+        <div class="prow"><div class="prow-key">Mid-Level (2–5y)</div><div class="prow-val">Own feature areas end-to-end. Design pipeline architecture for new data sources. Mentor juniors. Handle on-call incidents. Drive technical decisions for your domain.</div></div>
+        <div class="prow"><div class="prow-key">Senior (5–8y)</div><div class="prow-val">Define technical strategy for multiple areas. Drive cross-team technical initiatives. Identify systemic problems before they occur. Write design docs. Interview and hire candidates.</div></div>
+        <div class="prow"><div class="prow-key">Staff (8–12y)</div><div class="prow-val">Org-wide technical decisions. Evaluate and introduce new technologies. Lead multi-quarter migrations. Set platform standards. Influence company data strategy.</div></div>
+        <div class="prow"><div class="prow-key">Principal (12y+)</div><div class="prow-val">Industry-level impact. Open source leadership. Architectural vision for entire data org. External conference speaking. Shape the direction of data engineering practices.</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="panel-head-icon">🌿</div><div class="panel-head-title">Adjacent Career Paths</div></div>
+      <div class="panel-body">
+        <div class="prow"><div class="prow-key">Analytics Engineer</div><div class="prow-val">dbt-focused role bridging DE and analytics. Owns semantic layer, data models, metrics definitions. Less infrastructure, more business logic. Growing rapidly in demand.</div></div>
+        <div class="prow"><div class="prow-key">ML Engineer</div><div class="prow-val">Feature pipelines + model training infra + model serving. Combines DE skills with ML knowledge. Builds MLOps platforms (feature stores, experiment tracking, model registries).</div></div>
+        <div class="prow"><div class="prow-key">Data Platform Eng.</div><div class="prow-val">Build and operate internal data infrastructure — managed Airflow, dbt platform, data catalog, cost management tooling. Less pipeline building, more platform for other DEs.</div></div>
+        <div class="prow"><div class="prow-key">Data Architect</div><div class="prow-val">Enterprise-level design, vendor evaluation, governance strategy, migration planning, standards definition. Often a senior IC or principal who specializes in architecture over implementation.</div></div>
+        <div class="prow"><div class="prow-key">Engineering Manager</div><div class="prow-val">Lead a team of 4–8 DEs. Technical credibility + people skills. Own team roadmap, hiring, performance reviews. Stop coding day-to-day, become a force multiplier.</div></div>
+      </div>
+    </div>
+  </div>
+
+</div></div>
+
+<footer>
+  Data Engineering Roadmap &nbsp;·&nbsp; <a href="#">2025 Edition</a> &nbsp;·&nbsp; Built with precision for the modern data engineer
+</footer>
+
+<script>
+function go(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(t => t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
